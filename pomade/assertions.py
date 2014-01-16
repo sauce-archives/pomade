@@ -3,9 +3,8 @@ import json
 import time
 import traceback
 import sys
-import config
+from config import SPIN_TIMEOUT
 
-SPIN_TIMEOUT = config.SPIN_TIMEOUT
 
 class FailTestException(Exception):
     pass

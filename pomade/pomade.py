@@ -2,8 +2,6 @@ from helpers import Selenium2TestHelpers
 from assertions import PomadeAssertions, BasicAssertions
 from driver_interface import DriverInterface
 from decorator import decorator
-import config
-
 
 class UnsupportedDriverBehavior(Exception):
     pass
