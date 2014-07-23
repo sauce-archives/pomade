@@ -225,7 +225,7 @@ class BaseSeleniumTestCase(TestCase):
         return result.status == 200
 
 
-class Selenium2TestCase(BaseSeleniumTestCase, Selenium2TestHelpers):
+class Selenium2TestCase(BaseSeleniumTestCase, Selenium2TestHelpers, PomadeAssertions):
     os = None
     browser = None
     version = None
@@ -272,6 +272,7 @@ class Selenium2TestCase(BaseSeleniumTestCase, Selenium2TestHelpers):
               'version': self.version,
               'name': getattr(self, '_testMethodName',
                               self.name).replace('_', ' ').capitalize(),
+              'build': self.config.get('build') or os.environ.get('TRAVIS_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER') or os.environ.get('BUILD_TAG') or os.environ.get('CIRCLE_BUILD_NUM') or None,
               'max-duration': 600,
               'record-video': True,
               'selenium-version': self.config.get('selenium-version', None),
