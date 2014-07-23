@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
     name = "pomade",
     packages = ["pomade"],
-    version = "0.0.2",
+    version = "0.0.3",
     description = "Selenium PageObjects implementation with easy Sauce Labs integration",
     author = "Sauce Labs",
     author_email = "help@saucelabs.com",
