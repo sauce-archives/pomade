@@ -1,5 +1,3 @@
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/saucelabs/pomade/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
 How to install Pomade
 ---------------------
 
