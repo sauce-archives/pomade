@@ -113,6 +113,67 @@ class Selenium2TestHelpers(object):
         self.driver.get(url)
 
 
+def on_platforms(platforms):
+    def make_platform_class(base_class, i, platform):
+        os, browser, version = platform[:3]
+        device = platform[4] if len(platform) > 4 else None
+        provider = which_provider(platform)
+        if i > 0:
+            name = "%s_%s_%s_%s_%s_%s" % (base_class.__name__,
+                                          i,
+                                          provider or "any",
+                                          os,
+                                          browser,
+                                          version)
+            if name.endswith("."):
+                name = name[:-1]
+            if device:
+                name += "_%s" % device
+            name = name.encode('ascii')
+            for x in " .-":
+                name = name.replace(x, "_")
+        else:
+            name = base_class.__name__
+
+        d = dict(base_class.__dict__)
+        class_props = {
+            'name': name,
+            'os': os,
+            'browser': browser,
+            'version': version,
+            '_multiprocess_can_split_': True,
+            '_provider': provider,
+            'selenium_test': True,  # nose attribute
+        }
+        if device:
+            class_props['device'] = device
+
+        d.update(class_props)
+        return name, new.classobj(name, (base_class,), d)
+
+    def the_decorator(base_class):
+        if not platforms:
+            raise GoodNewsEveryone("on_platforms requires at least one platform")
+
+        classes = {}
+
+        random.shuffle(platforms)
+        for i, platform in enumerate(platforms):
+            name, new_class = make_platform_class(base_class, i, platform)
+            classes[name] = new_class
+        sys.modules[base_class.__module__].__dict__.update(classes)
+        name, new_class = make_platform_class(base_class, 0, platforms[0])
+        if new_class is None or isinstance(None, new_class) or name is 'NoneType':
+            raise Exception("This should never happen")
+        return new_class
+
+    if isinstance(platforms, list):
+        if len(platforms) > 0 and not isinstance(platforms[0], list):
+            platforms = [platforms]
+
+    return the_decorator
+
+
 @monkeypatch(webdriver.remote.webelement.WebElement)
 class PatientElement():
     def wait_for_attribute(self, attribute, expected, msg=None, timeout=None):
