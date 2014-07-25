@@ -16,6 +16,8 @@ import httplib
 import sys
 import json
 import base64
+import random
+import new
 
 def load_config():
     config_file = config.CONFIG_FILE_PATH
@@ -111,6 +113,10 @@ class Selenium2TestHelpers(object):
     def get(self, url, https=False):
         url = clean_url(url, self.base_url, https=https)
         self.driver.get(url)
+
+
+def which_provider(platform):
+    return platform[3] if len(platform) > 3 else os.environ.get("SAUCE_PROVIDER")
 
 
 def on_platforms(platforms):
